@@ -6,6 +6,9 @@ from tgcnbot import system, chat, user, message, vote
 from tgcnbot.extensions import logger, db
 
 
+class TokenNotAvailableException(Exception):
+    pass
+
 def error_handler(bot, update, error):
     logger.warning('Update "%s" caused error "%s"' % (update, error))
 
@@ -13,6 +16,8 @@ def error_handler(bot, update, error):
 def run(token=None):
     if token is None:
         token = os.getenv('TELEGRAM_TOKEN')
+        if token is None:
+            raise TokenNotAvailableException("Please setup Telegram Token")
 
     updater = Updater(token)
 
